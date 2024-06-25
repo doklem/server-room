@@ -20,20 +20,18 @@ export class Wall extends PhysicalInstancedMeshBase<PlaneGeometry> {
 
     public update(): void {
         const scale = new Vector3(this._options.walls.height, this._options.length, 1);
+        const left = new Quaternion().setFromAxisAngle(Wall.Y_AXIS, Constants.ANGLE_EAST);
+        const right = new Quaternion().setFromAxisAngle(Wall.Y_AXIS, Constants.ANGLE_WEST);
         for (let i = 0; i < this._options.instanceCount; i++) {
             const y = this._options.length * i;
             this.setMatrixAt(
                 i,
-                new Matrix4().compose(
-                    new Vector3(this._options.widthHalfNegative, y, 0),
-                    new Quaternion().setFromAxisAngle(Wall.Y_AXIS, Constants.ANGLE_EAST),
-                    scale));
+                new Matrix4().compose(new Vector3(this._options.widthHalfNegative, y, 0), left, scale)
+            );
             this.setMatrixAt(
                 i + this._options.instanceCount,
-                new Matrix4().compose(
-                    new Vector3(this._options.widthHalf, y, 0),
-                    new Quaternion().setFromAxisAngle(Wall.Y_AXIS, Constants.ANGLE_WEST),
-                    scale));
+                new Matrix4().compose(new Vector3(this._options.widthHalf, y, 0), right, scale)
+            );
         }
         this.instanceMatrix.needsUpdate = true;
         super.update();
