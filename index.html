@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:,">
+    <title>Server Room</title>
+</head>
+
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        position: relative;
+    }
+
+    .display {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+    }
+
+    .source-link {
+        position: absolute;
+        right: 2px;
+        bottom: 2px;
+        z-index: 2;
+    }
+</style>
+
+<body>
+    <canvas class="display" id="display"></canvas>
+    <a class="source-link" href="https://github.com/doklem/server-room" target="_blank">Source</a>
+</body>
+
+<script src="dist/main.min.js" type="module"></script>
+
+</html>
