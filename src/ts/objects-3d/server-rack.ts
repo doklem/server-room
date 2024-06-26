@@ -10,17 +10,13 @@ export class ServerRack extends PhysicalInstancedMeshBase<BoxGeometry> {
     }
 
     public update(): void {
-        const z = this._options.walls.height * -0.5 + this._options.walls.height * this._options.serverRack.height * 0.5;
-        const width = this._options.width * this._options.serverRack.width;
-        const matrix = new Matrix4().makeScale(
-            width,
-            this._options.length * this._options.serverRack.length,
-            this._options.walls.height * this._options.serverRack.height);
-        const left = this._options.widthHalfNegative + width * 0.5;
-        const right = this._options.widthHalf + width * -0.5;
+        const z = this._options.serverRack.roomHeight * -0.5 + this._options.serverRack.rackHeight * 0.5;
+        const matrix = new Matrix4().makeScale(this._options.serverRack.rackWidth, this._options.serverRack.rackLength, this._options.serverRack.rackHeight);
+        const left = this._options.serverRack.roomWidthHalfNegative + this._options.serverRack.rackWidth * 0.5;
+        const right = this._options.serverRack.roomWidthHalf + this._options.serverRack.rackWidth * -0.5;
         for (let i = 0; i < this._options.instanceCount; i++) {
-            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(left, this._options.length * i, z)));
-            this.setMatrixAt(i + this._options.instanceCount, matrix.clone().setPosition(new Vector3(right, this._options.length * i, z)));
+            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(left, this._options.serverRack.roomLength * i, z)));
+            this.setMatrixAt(i + this._options.instanceCount, matrix.clone().setPosition(new Vector3(right, this._options.serverRack.roomLength * i, z)));
         }
         this.instanceMatrix.needsUpdate = true;
         super.update();

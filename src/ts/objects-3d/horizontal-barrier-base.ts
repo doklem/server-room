@@ -14,10 +14,10 @@ export abstract class HorizontalBarrierBase extends PhysicalInstancedMeshBase<Pl
     }
 
     public update(): void {
-        const height = this._options.walls.height * -0.5;
-        const matrix = new Matrix4().makeScale(this._options.width, this._options.length, 1);
+        const height = this._options.serverRack.roomHeight * -0.5;
+        const matrix = new Matrix4().makeScale(this._options.serverRack.roomWidth, this._options.serverRack.roomLength, 1);
         for (let i = 0; i < this._options.instanceCount; i++) {
-            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(0, this._options.length * i, height)));
+            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(0, this._options.serverRack.roomLength * i, height)));
         }
         this.instanceMatrix.needsUpdate = true;
         super.update();

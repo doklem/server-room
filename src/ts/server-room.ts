@@ -51,8 +51,8 @@ export class ServerRoom {
         this._camera = new PerspectiveCamera(50, aspect, 0.01, 1000);
         this._camera.updateProjectionMatrix();
         this._camera.position.set(
-            this.options.widthHalf * this.options.camera.xOffset,
-            this.options.walls.height * -0.5 + this.options.walls.height * this.options.camera.height,
+            this.options.serverRack.roomWidthHalf * this.options.camera.xOffset,
+            this.options.serverRack.roomHeight * -0.5 + this.options.serverRack.roomHeight * this.options.camera.height,
             this._camera.position.z
         );
 
@@ -141,14 +141,14 @@ export class ServerRoom {
     }
 
     private update(): void {
-        const middleZ = this.options.instanceCount * this.options.length * -0.5;
+        const middleZ = this.options.instanceCount * this.options.serverRack.roomLength * -0.5;
         if (!this._controls) {
             this._cycleDuration = this.options.camera.cycleDuration;
-            this._pathZStart = middleZ + this.options.length * 0.5;
-            this._pathZLength = this.options.length * (-1 / this._cycleDuration);
+            this._pathZStart = middleZ + this.options.serverRack.roomLength * 0.5;
+            this._pathZLength = this.options.serverRack.roomLength * (-1 / this._cycleDuration);
             this._camera.position.set(
-                this.options.widthHalf * this.options.camera.xOffset,
-                this.options.walls.height * -0.5 + this.options.walls.height * this.options.camera.height,
+                this.options.serverRack.roomWidthHalf * this.options.camera.xOffset,
+                this.options.serverRack.roomHeight * -0.5 + this.options.serverRack.roomHeight * this.options.camera.height,
                 this._camera.position.z
             );
         }

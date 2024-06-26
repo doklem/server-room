@@ -22,13 +22,13 @@ export class CeilingLight extends InstancedMesh<BoxGeometry, MeshStandardMateria
     }
 
     public update(): void {
-        const height = (this._options.walls.height - this._options.ceiling.lightHeight) * 0.5;
+        const height = (this._options.serverRack.roomHeight- this._options.ceiling.lightHeight) * 0.5;
         const matrix = new Matrix4().makeScale(
-            this._options.width * this._options.ceiling.lightWidth,
-            this._options.length * this._options.ceiling.lightLength,
+            this._options.serverRack.roomWidth * this._options.ceiling.lightWidth,
+            this._options.serverRack.roomLength * this._options.ceiling.lightLength,
             this._options.ceiling.lightHeight);
         for (let i = 0; i < this._options.instanceCount; i++) {
-            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(0, this._options.length * i, height)));
+            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(0, this._options.serverRack.roomLength * i, height)));
         }
         this.instanceMatrix.needsUpdate = true;
         this.material.color.copy(this._options.ceiling.lightColor);
