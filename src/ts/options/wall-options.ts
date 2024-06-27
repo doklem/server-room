@@ -1,17 +1,13 @@
 import { GUI } from 'lil-gui';
-import { PhysicalMaterialOptions } from './physical-material-options';
+import { StandardMaterialOptions } from './standard-material-options';
 
-export class WallOptions extends PhysicalMaterialOptions {
-    
-    public height: number = 2.5;
+export class WallOptions extends StandardMaterialOptions {
 
     constructor() {
         super('white');        
     }
 
-    public addToGui(gui: GUI, onChange: () => void): void {
-        const folder = gui.addFolder('Walls').close();
-        folder.add(this, 'height', 1.8, 4, 0.1).name('Height').onFinishChange(onChange);
-        super.addToGui(folder, onChange);
+    public override addToGui(gui: GUI, onChange: () => void): GUI {
+        return super.addToGui(gui, onChange, 'Walls');
     }
 }

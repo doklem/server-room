@@ -14,7 +14,7 @@ export class FloorOptions extends PhysicalMaterialOptions {
         this.reflectivity = 1;
     }
 
-    public override addToGui(gui: GUI, onChange: () => void): void {
-        super.addToGui(gui, onChange, 'Floor');
+    public override addToGui(gui: GUI, onChange: () => void): GUI {
+        return super.addToGui(gui, onChange, 'Floor');
     }
 }

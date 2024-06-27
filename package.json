@@ -5,15 +5,15 @@
   "main": "dist/main.min.js",
   "scripts": {
     "ci": "pnpm i && pnpm run build:prod && pnpm run lint",
-    "start": "pnpm i && pnpm run build:dev && pnpm run serve",
+    "start": "pnpm i && pnpm run build:dev && pnpm run lint && pnpm run serve",
     "build:prod": "webpack --config webpack.config.js --mode production",
     "build:dev": "webpack --config webpack.config.js --mode development",
     "serve": "http-server",
     "lint": "eslint ./src"
   },
   "keywords": [],
-  "author": "",
-  "license": "",
+  "author": "doklem",
+  "license": "MIT",
   "dependencies": {
     "lil-gui": "^0.19.2",
     "three": "^0.165.0"

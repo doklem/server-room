@@ -1,11 +1,11 @@
 import FragmentShaderSource from './../../shaders/ceiling-map-fragment.glsl';
-import { Color, PlaneGeometry, Texture, Vector2, WebGLRenderer } from 'three';
-import { ServerRoomOptions } from '../options/server-room-options';
-import { HorizontalBarrierBase } from './horizontal-barrier-base';
+import { Color, Matrix4, PlaneGeometry, Vector2, Vector3 } from 'three';
 import { TextureGenerator } from '../texture-generator';
-import { PhysicalMaterialOptions } from '../options/physical-material-options';
+import { IServiceProvider } from '../service-provider';
+import { StandardInstancedMeshBase } from './standard-instanced-mesh-base';
+import { StandardMaterialOptions } from '../options/standard-material-options';
 
-export class Ceiling extends HorizontalBarrierBase {
+export class Ceiling extends StandardInstancedMeshBase<PlaneGeometry> {
 
     private readonly _mapGenerator: TextureGenerator;
 
@@ -27,28 +27,31 @@ export class Ceiling extends HorizontalBarrierBase {
         fragmentShader: FragmentShaderSource
     };
 
-    constructor(
-        options: ServerRoomOptions,
-        geometry: PlaneGeometry,
-        environmentMap: Texture,
-        renderer: WebGLRenderer) {
-        super(options, geometry, environmentMap);
+    constructor(provider: IServiceProvider) {
+        super(provider, provider.geometries.plane);
 
-        this._mapGenerator = new TextureGenerator(renderer, this._mapShaderParameter);
+        this._mapGenerator = new TextureGenerator(provider.renderer, this._mapShaderParameter);
         this.material.map = this._mapGenerator.texture;
         this.material.needsUpdate = true;
     }
 
     public override update(): void {
-        this._mapShaderParameter.uniforms.uColor.value.set(this._options.ceiling.color);
-        this._mapShaderParameter.uniforms.uDividerColor.value.set(this._options.ceiling.dividerColor);
-        this._mapShaderParameter.uniforms.uDividerCount.value.copy(this._options.ceiling.dividers);
-        this._mapShaderParameter.uniforms.uDividerStart.value = this._options.ceiling.dividerStart;
+        this._mapShaderParameter.uniforms.uColor.value.set(this._provider.options.ceiling.panelColor);
+        this._mapShaderParameter.uniforms.uDividerColor.value.set(this._provider.options.ceiling.dividerColor);
+        this._mapShaderParameter.uniforms.uDividerCount.value.copy(this._provider.options.ceiling.dividers);
+        this._mapShaderParameter.uniforms.uDividerStart.value = this._provider.options.ceiling.dividerStart;
         this._mapGenerator.render()
+
+        const height = this._provider.options.serverRack.roomHeight * -0.5;
+        const matrix = new Matrix4().makeScale(this._provider.options.serverRack.roomWidth, this._provider.options.serverRack.roomLength, 1);
+        for (let i = 0; i < this._provider.options.instanceCount; i++) {
+            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(0, this._provider.options.serverRack.roomLength * i, height)));
+        }
+        this.instanceMatrix.needsUpdate = true;
         super.update();
     }
 
-    public override getPhysicalMaterialOptions(): PhysicalMaterialOptions {
-        return this._options.ceiling;
+    protected override getMaterialOptions(): StandardMaterialOptions {
+        return this._provider.options.ceiling;
     }
 }
