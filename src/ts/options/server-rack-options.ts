@@ -1,9 +1,8 @@
 import { GUI } from 'lil-gui';
-import { PhysicalMaterialOptions } from './physical-material-options';
 import { ServerHousingOptions } from './server-housing-options';
 import { ServerBladeOptions } from './server-blade-options';
 
-export class ServerRackOptions extends PhysicalMaterialOptions {
+export class ServerRackOptions {
 
     private _gapLength: number = 1;
     private _roomLength: number = 0;
@@ -70,14 +69,10 @@ export class ServerRackOptions extends PhysicalMaterialOptions {
     }
 
     constructor() {
-        super('gray');
-        this.envMapIntensity = 1.0;
-        this.roughness = 0.3;
-        this.metalness = 1;
         this.updateCalculatedValues();
     }
 
-    public override addToGui(gui: GUI, onChange: () => void): GUI {
+    public addToGui(gui: GUI, onChange: () => void): GUI {
         const folder = gui.addFolder('ServerRack').close();
 
         const gapFolder = folder.addFolder('Gaps').close();
@@ -92,8 +87,6 @@ export class ServerRackOptions extends PhysicalMaterialOptions {
 
         this.blade.addToGui(folder, onChangeWithInternals);
         this.housing.addToGui(folder, onChangeWithInternals);
-
-        super.addToGui(folder, onChange);
         return folder;
     }
 

@@ -1,11 +1,11 @@
 import { Color, Vector2 } from 'three';
 import { GUI } from 'lil-gui';
-import { PhysicalMaterialOptions } from './physical-material-options';
 import { CeilingLightOptions } from './ceiling-light-options';
+import { StandardMaterialOptions } from './standard-material-options';
 
-export class CeilingOptions extends PhysicalMaterialOptions {
+export class CeilingOptions extends StandardMaterialOptions {
     
-    public readonly color: Color = new Color('lightgray');
+    public readonly panelColor: Color = new Color('lightgray');
     public readonly dividerColor: Color = new Color('gray');
     public readonly dividers: Vector2 = new Vector2(5, 3);
     public readonly dividerStart: number = 0.05;
@@ -14,7 +14,8 @@ export class CeilingOptions extends PhysicalMaterialOptions {
     public override addToGui(gui: GUI, onChange: () => void): GUI {        
         const folder = gui.addFolder('Ceiling').close();
 
-        super.addToGui(folder, onChange, 'Panels');
+        const panelFolder = super.addToGui(folder, onChange, 'Panels');
+        panelFolder.addColor(this, 'panelColor').name('Color').onFinishChange(onChange);
         
         const dividerFolder = folder.addFolder('Gaps').close();
         dividerFolder.addColor(this, 'dividerColor').name('Color').onFinishChange(onChange);

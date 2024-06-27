@@ -9,14 +9,7 @@ export abstract class StandardInstancedMeshBase<TGeometry extends BufferGeometry
     }
 
     public update(): void {
-        const materialOptions = this.getMaterialOptions();
-        this.material.roughness = materialOptions.roughness;
-        this.material.metalness = materialOptions.metalness;
-        this.material.envMapIntensity = materialOptions.envMapIntensity;
-        if (materialOptions.color) {
-            this.material.color.set(materialOptions.color);
-        }
-        this.material.needsUpdate = true;
+        this.getMaterialOptions().applyToMaterial(this.material);
     }
 
     protected abstract getMaterialOptions(): StandardMaterialOptions;

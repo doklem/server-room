@@ -1,8 +1,8 @@
 import { GUI } from 'lil-gui';
-import { ColorRepresentation } from 'three';
-import { StandardMaterialOptions } from './standard-material-options';
+import { ColorRepresentation, MeshPhysicalMaterial } from 'three';
+import { StandardMaterialOptionsBase } from './standard-material-options-base';
 
-export abstract class PhysicalMaterialOptions extends StandardMaterialOptions {
+export class PhysicalMaterialOptions extends StandardMaterialOptionsBase<MeshPhysicalMaterial> {
 
     public clearcoat: number = 0;
     public clearcoatRoughness: number = 0;
@@ -20,5 +20,13 @@ export abstract class PhysicalMaterialOptions extends StandardMaterialOptions {
         folder.add(this, 'clearcoatRoughness', 0, 1, 0.01).name('Clearcoat Roughness').onFinishChange(onChange);
         folder.add(this, 'thickness', 0, 10, 0.01).name('Clearcoat Thickness').onFinishChange(onChange);
         return folder;
+    }
+
+    public override applyToMaterial(material: MeshPhysicalMaterial): void {
+        material.clearcoat = this.clearcoat;
+        material.clearcoatRoughness = this.clearcoatRoughness;
+        material.reflectivity = this.reflectivity;
+        material.thickness = this.thickness;
+        super.applyToMaterial(material);
     }
 }
