@@ -9,19 +9,19 @@ export abstract class PhysicalInstancedMeshBase<TGeometry extends BufferGeometry
     }
 
     public update(): void {
-        const physicalMaterialOptions = this.getPhysicalMaterialOptions();
-        this.material.roughness = physicalMaterialOptions.roughness;
-        this.material.metalness = physicalMaterialOptions.metalness;
-        this.material.clearcoat = physicalMaterialOptions.clearcoat;
-        this.material.clearcoatRoughness = physicalMaterialOptions.clearcoatRoughness;
-        this.material.reflectivity = physicalMaterialOptions.reflectivity;
-        this.material.thickness = physicalMaterialOptions.thickness;
-        this.material.envMapIntensity = physicalMaterialOptions.envMapIntensity;
-        if (physicalMaterialOptions.color) {
-            this.material.color.set(physicalMaterialOptions.color);
+        const materialOptions = this.getMaterialOptions();
+        this.material.roughness = materialOptions.roughness;
+        this.material.metalness = materialOptions.metalness;
+        this.material.clearcoat = materialOptions.clearcoat;
+        this.material.clearcoatRoughness = materialOptions.clearcoatRoughness;
+        this.material.reflectivity = materialOptions.reflectivity;
+        this.material.thickness = materialOptions.thickness;
+        this.material.envMapIntensity = materialOptions.envMapIntensity;
+        if (materialOptions.color) {
+            this.material.color.set(materialOptions.color);
         }
         this.material.needsUpdate = true;
     }
 
-    protected abstract getPhysicalMaterialOptions(): PhysicalMaterialOptions;
+    protected abstract getMaterialOptions(): PhysicalMaterialOptions;
 }

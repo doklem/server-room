@@ -44,7 +44,7 @@ export class Ceiling extends HorizontalBarrierBase {
         super.update();
     }
 
-    protected override getPhysicalMaterialOptions(): PhysicalMaterialOptions {
+    protected override getMaterialOptions(): PhysicalMaterialOptions {
         return this._provider.options.ceiling;
     }
 }

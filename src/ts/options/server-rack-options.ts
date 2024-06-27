@@ -77,7 +77,7 @@ export class ServerRackOptions extends PhysicalMaterialOptions {
         this.updateCalculatedValues();
     }
 
-    public addToGui(gui: GUI, onChange: () => void): void {
+    public override addToGui(gui: GUI, onChange: () => void): GUI {
         const folder = gui.addFolder('ServerRack').close();
 
         const gapFolder = folder.addFolder('Gaps').close();
@@ -94,6 +94,7 @@ export class ServerRackOptions extends PhysicalMaterialOptions {
         this.housing.addToGui(folder, onChangeWithInternals);
 
         super.addToGui(folder, onChange);
+        return folder;
     }
 
     private updateCalculatedValues(): void {

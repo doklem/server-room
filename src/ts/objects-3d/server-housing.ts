@@ -89,7 +89,7 @@ export class ServerHousing extends PhysicalInstancedMeshBase<BoxGeometry> {
         super.update();
     }
 
-    protected override getPhysicalMaterialOptions(): PhysicalMaterialOptions {
+    protected override getMaterialOptions(): PhysicalMaterialOptions {
         return this._provider.options.serverRack.housing;
     }
 }

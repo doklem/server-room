@@ -1,32 +1,35 @@
-import { BoxGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, Vector3 } from 'three';
+import { BoxGeometry, Matrix4, Vector3 } from 'three';
 import { IServiceProvider } from '../service-provider';
+import { StandardInstancedMeshBase } from './standard-instanced-mesh-base';
+import { StandardMaterialOptions } from '../options/standard-material-options';
 
-export class CeilingLight extends InstancedMesh<BoxGeometry, MeshStandardMaterial> {
+export class CeilingLight extends StandardInstancedMeshBase<BoxGeometry> {
 
-    constructor(private readonly _provider: IServiceProvider) {
-        super(
-            _provider.geometries.box,
-            new MeshStandardMaterial(
-                {
-                    color: _provider.options.ceiling.lightColor.clone(),
-                    emissive: _provider.options.ceiling.lightColor.clone()
-                }
-            ),
-            _provider.options.instanceCount);
+    constructor(private readonly provider: IServiceProvider) {
+        super(provider, provider.geometries.box);
+        if (provider.options.ceiling.light.color) {
+            this.material.emissive = provider.options.ceiling.light.color.clone();
+            this.material.needsUpdate = true;
+        }
     }
 
     public update(): void {
-        const height = (this._provider.options.serverRack.roomHeight- this._provider.options.ceiling.lightHeight) * 0.5;
+        const height = (this.provider.options.serverRack.roomHeight- this.provider.options.ceiling.light.height) * 0.5;
         const matrix = new Matrix4().makeScale(
-            this._provider.options.serverRack.roomWidth * this._provider.options.ceiling.lightWidth,
-            this._provider.options.serverRack.roomLength * this._provider.options.ceiling.lightLength,
-            this._provider.options.ceiling.lightHeight);
-        for (let i = 0; i < this._provider.options.instanceCount; i++) {
-            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(0, this._provider.options.serverRack.roomLength * i, height)));
+            this.provider.options.serverRack.roomWidth * this.provider.options.ceiling.light.width,
+            this.provider.options.serverRack.roomLength * this.provider.options.ceiling.light.length,
+            this.provider.options.ceiling.light.height);
+        for (let i = 0; i < this.provider.options.instanceCount; i++) {
+            this.setMatrixAt(i, matrix.clone().setPosition(new Vector3(0, this.provider.options.serverRack.roomLength * i, height)));
         }
         this.instanceMatrix.needsUpdate = true;
-        this.material.color.copy(this._provider.options.ceiling.lightColor);
-        this.material.emissive.copy(this._provider.options.ceiling.lightColor);
-        this.material.needsUpdate = true;
+        if (this.provider.options.ceiling.light.color) {
+            this.material.emissive.copy(this.provider.options.ceiling.light.color);
+        }
+        super.update();
+    }
+
+    protected override getMaterialOptions(): StandardMaterialOptions {
+        return this.provider.options.ceiling.light;
     }
 }

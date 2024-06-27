@@ -56,7 +56,7 @@ export class ServerRoom implements IServiceProvider {
         this.geometries = new GeometryService();
 
         const aspect = window.innerWidth / window.innerHeight;
-        this._camera = new PerspectiveCamera(50, aspect, 0.01, 1000);
+        this._camera = new PerspectiveCamera(50, aspect, 0.01, 500);
         this._camera.updateProjectionMatrix();
         this._camera.position.set(
             this.options.serverRack.roomWidthHalf * this.options.camera.xOffset,
@@ -84,10 +84,10 @@ export class ServerRoom implements IServiceProvider {
         this._environmentMapCamera = new CubeCamera(this._camera.near, this._camera.far, this._environmentMapRenderTarget);
 
         this._scene = new Scene();
-        this._scene.background = this.options.ceiling.lightColor.clone();
+        this._scene.background = this.options.ambientLight.clone();
         this._scene.rotateX(Constants.ANGLE_WEST);
 
-        this._fog = new Fog(this.options.ceiling.lightColor.clone());
+        this._fog = new Fog(this.options.ambientLight.clone());
         this._fog.near = 0;
         this._scene.fog = this._fog;
 
@@ -111,7 +111,7 @@ export class ServerRoom implements IServiceProvider {
         this._serverBlade = new ServerBlade(this);
         this._scene.add(this._serverBlade);
 
-        this._ambientLight = new AmbientLight(this.options.ceiling.lightColor.clone(), this.options.ceiling.lightIntensity);
+        this._ambientLight = new AmbientLight(this.options.ambientLight.clone(), this.options.ambientLightIntensity);
         this._scene.add(this._ambientLight);
 
         if (this.options.camera.manualControl) {
@@ -147,10 +147,9 @@ export class ServerRoom implements IServiceProvider {
     }
 
     private update(): void {
-        const middleZ = this.options.instanceCount * this.options.serverRack.roomLength * -0.5;
         if (!this._controls) {
             this._cycleDuration = this.options.camera.cycleDuration;
-            this._pathZStart = middleZ + this.options.serverRack.roomLength * 0.5;
+            this._pathZStart = this.options.serverRack.roomLength * 0.5 - this.options.instanceCount * this.options.serverRack.roomLength * 0.25;
             this._pathZLength = this.options.serverRack.roomLength * (-1 / this._cycleDuration);
             this._camera.position.set(
                 this.options.serverRack.roomWidthHalf * this.options.camera.xOffset,
@@ -158,6 +157,7 @@ export class ServerRoom implements IServiceProvider {
                 this._camera.position.z
             );
         }
+        this._camera.far = this.options.instanceCount * this.options.serverRack.roomLength * 0.75;
         this._camera.filmGauge = this.options.camera.filmGauge;
         this._camera.setFocalLength(this.options.camera.focalLength);
 
@@ -168,10 +168,10 @@ export class ServerRoom implements IServiceProvider {
         this._serverHousing.update();
         this._serverBlade.update();
 
-        this._ambientLight.color.set(this.options.ceiling.lightColor);
-        this._ambientLight.intensity = this.options.ceiling.lightIntensity;
+        this._ambientLight.color.set(this.options.ambientLight);
+        this._ambientLight.intensity = this.options.ambientLightIntensity;
 
-        this._fog.far = -middleZ;
+        this._fog.far = this._camera.far;
         this._fog.color.set(this._ambientLight.color);
         (this._scene.background as Color)?.copy(this._ambientLight.color);
     }

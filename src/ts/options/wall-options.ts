@@ -1,13 +1,13 @@
 import { GUI } from 'lil-gui';
-import { PhysicalMaterialOptions } from './physical-material-options';
+import { StandardMaterialOptions } from './standard-material-options';
 
-export class WallOptions extends PhysicalMaterialOptions {
+export class WallOptions extends StandardMaterialOptions {
 
     constructor() {
         super('white');        
     }
 
-    public addToGui(gui: GUI, onChange: () => void): void {
-        super.addToGui(gui, onChange, 'Walls');
+    public override addToGui(gui: GUI, onChange: () => void): GUI {
+        return super.addToGui(gui, onChange, 'Walls');
     }
 }

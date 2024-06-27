@@ -1,10 +1,10 @@
 import { Matrix4, PlaneGeometry, Vector3 } from 'three';
-import { PhysicalInstancedMeshBase } from './physical-instanced-mesh-base';
-import { PhysicalMaterialOptions } from '../options/physical-material-options';
 import { Constants } from '../constants';
 import { IServiceProvider } from '../service-provider';
+import { StandardInstancedMeshBase } from './standard-instanced-mesh-base';
+import { StandardMaterialOptions } from '../options/standard-material-options';
 
-export class Wall extends PhysicalInstancedMeshBase<PlaneGeometry> {
+export class Wall extends StandardInstancedMeshBase<PlaneGeometry> {
 
     constructor(provider: IServiceProvider) {
         super(provider, provider.geometries.plane, provider.options.instanceCount * 2);
@@ -28,7 +28,7 @@ export class Wall extends PhysicalInstancedMeshBase<PlaneGeometry> {
         super.update();
     }
 
-    protected override getPhysicalMaterialOptions(): PhysicalMaterialOptions {
+    protected override getMaterialOptions(): StandardMaterialOptions {
         return this._provider.options.walls;
     }
 }

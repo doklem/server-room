@@ -43,7 +43,7 @@ export class ServerBlade extends PhysicalInstancedMeshBase<PlaneGeometry> {
     }
 
 
-    protected override getPhysicalMaterialOptions(): PhysicalMaterialOptions {
+    protected override getMaterialOptions(): PhysicalMaterialOptions {
         return this._provider.options.serverRack.blade;
     }
 }
