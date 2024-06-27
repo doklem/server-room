@@ -22,6 +22,8 @@ import { IServiceProvider } from './service-provider';
 import { GeometryService } from './geometries/geometry-service';
 import { ServerHousing } from './objects-3d/server-housing';
 import { ServerBlade } from './objects-3d/server-blade';
+import { SoundService } from './sound-service';
+import { ServerSoundEmitter } from './objects-3d/server-sound-emitter';
 
 export class ServerRoom implements IServiceProvider {
 
@@ -37,6 +39,7 @@ export class ServerRoom implements IServiceProvider {
     private readonly _ambientLight: AmbientLight;
     private readonly _serverHousing: ServerHousing;
     private readonly _serverBlade: ServerBlade;
+    private readonly _serverSoundEmitter: ServerSoundEmitter;
     private readonly _controls?: MapControls;
 
     private _pathZStart: number = 0;
@@ -46,6 +49,8 @@ export class ServerRoom implements IServiceProvider {
     public readonly options: ServerRoomOptions;
     public readonly geometries: GeometryService;
     public readonly renderer: WebGLRenderer;
+
+    public sounds: SoundService;
 
     public get environmentMap(): Texture {
         return this._environmentMapRenderTarget.texture;
@@ -111,16 +116,33 @@ export class ServerRoom implements IServiceProvider {
         this._serverBlade = new ServerBlade(this);
         this._scene.add(this._serverBlade);
 
+        this._serverSoundEmitter = new ServerSoundEmitter(this);
+        this._scene.add(this._serverSoundEmitter);
+
+        this.sounds = new SoundService(this, this._serverSoundEmitter);
+
         this._ambientLight = new AmbientLight(this.options.ambientLight.clone(), this.options.ambientLightIntensity);
         this._scene.add(this._ambientLight);
 
         if (this.options.camera.manualControl) {
-            this._controls = new MapControls(this._camera, _canvas);
-            this._controls.update();
+        this._controls = new MapControls(this._camera, _canvas);
+        this._controls.update();
         }
 
-        this.update();
-        this.options.addToGui(new GUI({ title: 'Server Room' }), () => this.update());
+        this.updateGraphic();
+        this.updateCamera();
+        this.options.addToGui(
+            new GUI({ title: 'Server Room' }),
+            () => this.updateGraphic(),
+            () => this.updateCamera(),
+            () => {
+                if (!this.sounds.loaded) {
+                    this.sounds.loadAsync(this._camera);
+                } else {
+                    this.sounds.update();
+                }
+            }
+        );
     }
 
     public animate(time: DOMHighResTimeStamp): void {
@@ -146,10 +168,26 @@ export class ServerRoom implements IServiceProvider {
         this.renderer.setSize(width, height);
     }
 
-    private update(): void {
+    private updateGraphic(): void {
+        this._floor.update();
+        this._ceiling.update();
+        this._wall.update();
+        this._ceilingLight.update();
+        this._serverHousing.update();
+        this._serverBlade.update();
+        this._serverSoundEmitter.update();
+
+        this._ambientLight.color.set(this.options.ambientLight);
+        this._ambientLight.intensity = this.options.ambientLightIntensity;
+
+        this._fog.color.set(this._ambientLight.color);
+        (this._scene.background as Color)?.copy(this._ambientLight.color);
+    }
+
+    private updateCamera(): void {
         if (!this._controls) {
             this._cycleDuration = this.options.camera.cycleDuration;
-            this._pathZStart = this.options.serverRack.roomLength * 0.5 - this.options.instanceCount * this.options.serverRack.roomLength * 0.25;
+            this._pathZStart = this.options.serverRack.roomLength * 0.5 - this.options.instanceCount * this.options.serverRack.roomLength * Constants.START_OFFSET;
             this._pathZLength = this.options.serverRack.roomLength * (-1 / this._cycleDuration);
             this._camera.position.set(
                 this.options.serverRack.roomWidthHalf * this.options.camera.xOffset,
@@ -157,22 +195,10 @@ export class ServerRoom implements IServiceProvider {
                 this._camera.position.z
             );
         }
-        this._camera.far = this.options.instanceCount * this.options.serverRack.roomLength * 0.75;
+        this._camera.far = this.options.instanceCount * this.options.serverRack.roomLength * (1 - Constants.START_OFFSET);
         this._camera.filmGauge = this.options.camera.filmGauge;
         this._camera.setFocalLength(this.options.camera.focalLength);
 
-        this._floor.update();
-        this._ceiling.update();
-        this._wall.update();
-        this._ceilingLight.update();
-        this._serverHousing.update();
-        this._serverBlade.update();
-
-        this._ambientLight.color.set(this.options.ambientLight);
-        this._ambientLight.intensity = this.options.ambientLightIntensity;
-
         this._fog.far = this._camera.far;
-        this._fog.color.set(this._ambientLight.color);
-        (this._scene.background as Color)?.copy(this._ambientLight.color);
     }
 }

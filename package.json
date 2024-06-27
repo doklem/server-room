@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^20.12.12",
     "@types/three": "^0.165.0",
+    "copy-webpack-plugin": "^12.0.2",
     "http-server": "^14.1.1",
     "ts-loader": "^9.5.1",
     "ts-shader-loader": "^2.0.2",

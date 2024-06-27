@@ -10,7 +10,7 @@ export class Floor extends Mesh<PlaneGeometry, MeshPhysicalMaterial> {
     public update(): void {
         this.position.set(
             0,
-            this._provider.options.serverRack.roomLength * this._provider.options.instanceCount * 0.5,
+            this._provider.options.serverRack.roomLength * this._provider.options.instanceCount * 0.5 - this._provider.options.serverRack.roomLength * 0.5,
             this._provider.options.serverRack.roomHeight * -0.5);
         this.scale.set(
             this._provider.options.serverRack.roomWidth,

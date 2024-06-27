@@ -16,7 +16,7 @@ export class Wall extends StandardInstancedMeshBase<PlaneGeometry> {
             this._provider.options.serverRack.roomLength * this._provider.options.instanceCount,
             1);
         const x = this._provider.options.serverRack.roomWidth * 0.5;
-        const y = this._provider.options.serverRack.roomLength * this._provider.options.instanceCount * 0.5;
+        const y = this._provider.options.serverRack.roomLength * this._provider.options.instanceCount * 0.5 - this._provider.options.serverRack.roomLength * 0.5;
         this.setMatrixAt(
             0,
             new Matrix4().compose(new Vector3(-x, y, 0), Constants.Y_AXIS_EAST, scale)
