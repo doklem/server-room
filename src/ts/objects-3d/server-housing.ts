@@ -1,10 +1,10 @@
-import { PhysicalInstancedMeshBase } from './physical-instanced-mesh-base';
-import { PhysicalMaterialOptions } from '../options/physical-material-options';
 import { IServiceProvider } from '../service-provider';
 import { BoxGeometry, Matrix4, Vector3 } from 'three';
 import { Constants } from '../constants';
+import { StandardMaterialOptions } from '../options/standard-material-options';
+import { StandardInstancedMeshBase } from './standard-instanced-mesh-base';
 
-export class ServerHousing extends PhysicalInstancedMeshBase<BoxGeometry> {
+export class ServerHousing extends StandardInstancedMeshBase<BoxGeometry> {
 
     public readonly soundPositions: Vector3[];
 
@@ -98,7 +98,7 @@ export class ServerHousing extends PhysicalInstancedMeshBase<BoxGeometry> {
         super.update();
     }
 
-    protected override getMaterialOptions(): PhysicalMaterialOptions {
+    protected override getMaterialOptions(): StandardMaterialOptions {
         return this._provider.options.serverRack.housing;
     }
 }

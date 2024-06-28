@@ -1,11 +1,11 @@
 import GUI from 'lil-gui';
-import { PhysicalMaterialOptions } from './physical-material-options';
+import { StandardMaterialOptions } from './standard-material-options';
 
-export class ServerBladeOptions extends PhysicalMaterialOptions {
+export class ServerBladeOptions extends StandardMaterialOptions {
 
     public countHorizontal: number = 4;
     public countVertical: number = 10;
-    public xOffset: number = 0.05;
+    public xOffset: number = 0.03;
 
     constructor() {
         super('lightgray');

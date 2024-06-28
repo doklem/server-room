@@ -1,7 +1,7 @@
 import GUI from 'lil-gui';
-import { PhysicalMaterialOptions } from './physical-material-options';
+import { StandardMaterialOptions } from './standard-material-options';
 
-export class ServerHousingOptions extends PhysicalMaterialOptions {
+export class ServerHousingOptions extends StandardMaterialOptions {
 
     public width: number = 2;
     public length: number = 4;
