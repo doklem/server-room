@@ -7,8 +7,12 @@ import {
     PositionalAudio
 } from 'three';
 import { IServiceProvider } from './service-provider';
+import { ServerSoundEmitters } from './objects-3d/server-sound-emitters';
 
 export class SoundService {
+
+    private static readonly SERVER_AMPLIFICATION: number = 6;
+    private static readonly AMBIENT_AMPLIFICATION: number = 0.5;
 
     private _ambientSound?: Audio;
     private _serverSound?: PositionalAudio;
@@ -17,7 +21,7 @@ export class SoundService {
 
     constructor(
         private readonly _provider: IServiceProvider,
-        private readonly _serverSoundSource: Object3D) {
+        private readonly _serverSoundEmitters: ServerSoundEmitters) {
         this.loaded = false;
     }
 
@@ -41,27 +45,27 @@ export class SoundService {
         this._serverSound = new PositionalAudio(audioListener);
         this._serverSound.setBuffer(serverBuffer);
         this._serverSound.setLoop(true);
-        this._serverSound.setRefDistance(10);
-        this._serverSoundSource.add(this._serverSound);
+        this._serverSoundEmitters.children.forEach((child: Object3D) => child.add(this._serverSound!));
 
         this.update();
     }
 
     public update(): void {
         if (this._ambientSound) {
-            this._ambientSound.setVolume(this._provider.options.sound.master * this._provider.options.sound.ambient);
-            if (this._provider.options.sound.enabled && !this._ambientSound.isPlaying) {
+            this._ambientSound.setVolume(this._provider.options.sound.master * this._provider.options.sound.ambient * SoundService.AMBIENT_AMPLIFICATION);
+            if (!this._provider.options.sound.mute && !this._ambientSound.isPlaying) {
                 this._ambientSound.play();
-            } else if (!this._provider.options.sound.enabled && this._ambientSound.isPlaying) {
+            } else if (this._provider.options.sound.mute && this._ambientSound.isPlaying) {
                 this._ambientSound.stop();
             }
         }
 
         if (this._serverSound) {
-            this._serverSound.setVolume(this._provider.options.sound.master * this._provider.options.sound.server);
-            if (this._provider.options.sound.enabled && !this._serverSound.isPlaying) {
+            this._serverSound.setMaxDistance(this._provider.options.serverRack.housing.width);
+            this._serverSound.setVolume(this._provider.options.sound.master * this._provider.options.sound.server * SoundService.SERVER_AMPLIFICATION);
+            if (!this._provider.options.sound.mute && !this._serverSound.isPlaying) {
                 this._serverSound.play();
-            } else if (!this._provider.options.sound.enabled && this._serverSound.isPlaying) {
+            } else if (this._provider.options.sound.mute && this._serverSound.isPlaying) {
                 this._serverSound.stop();
             }
         }

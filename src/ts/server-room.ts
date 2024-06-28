@@ -23,7 +23,7 @@ import { GeometryService } from './geometries/geometry-service';
 import { ServerHousing } from './objects-3d/server-housing';
 import { ServerBlade } from './objects-3d/server-blade';
 import { SoundService } from './sound-service';
-import { ServerSoundEmitter } from './objects-3d/server-sound-emitter';
+import { ServerSoundEmitters } from './objects-3d/server-sound-emitters';
 
 export class ServerRoom implements IServiceProvider {
 
@@ -39,7 +39,7 @@ export class ServerRoom implements IServiceProvider {
     private readonly _ambientLight: AmbientLight;
     private readonly _serverHousing: ServerHousing;
     private readonly _serverBlade: ServerBlade;
-    private readonly _serverSoundEmitter: ServerSoundEmitter;
+    private readonly _serverSoundEmitters: ServerSoundEmitters;
     private readonly _controls?: MapControls;
 
     private _pathZStart: number = 0;
@@ -116,17 +116,17 @@ export class ServerRoom implements IServiceProvider {
         this._serverBlade = new ServerBlade(this);
         this._scene.add(this._serverBlade);
 
-        this._serverSoundEmitter = new ServerSoundEmitter(this);
-        this._scene.add(this._serverSoundEmitter);
+        this._serverSoundEmitters = new ServerSoundEmitters(this, this._serverHousing);
+        this._scene.add(this._serverSoundEmitters);
 
-        this.sounds = new SoundService(this, this._serverSoundEmitter);
+        this.sounds = new SoundService(this, this._serverSoundEmitters);
 
         this._ambientLight = new AmbientLight(this.options.ambientLight.clone(), this.options.ambientLightIntensity);
         this._scene.add(this._ambientLight);
 
         if (this.options.camera.manualControl) {
-        this._controls = new MapControls(this._camera, _canvas);
-        this._controls.update();
+            this._controls = new MapControls(this._camera, _canvas);
+            this._controls.update();
         }
 
         this.updateGraphic();
@@ -175,7 +175,7 @@ export class ServerRoom implements IServiceProvider {
         this._ceilingLight.update();
         this._serverHousing.update();
         this._serverBlade.update();
-        this._serverSoundEmitter.update();
+        this._serverSoundEmitters.update();
 
         this._ambientLight.color.set(this.options.ambientLight);
         this._ambientLight.intensity = this.options.ambientLightIntensity;
