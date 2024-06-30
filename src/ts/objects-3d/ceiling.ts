@@ -1,5 +1,5 @@
 import FragmentShaderSource from './../../shaders/ceiling-map-fragment.glsl';
-import { Color, Matrix4, PlaneGeometry, Vector2, Vector3 } from 'three';
+import { Color, Matrix4, PlaneGeometry, RepeatWrapping, Vector2, Vector3 } from 'three';
 import { TextureGenerator } from '../texture-generator';
 import { IServiceProvider } from '../service-provider';
 import { StandardInstancedMeshBase } from './standard-instanced-mesh-base';
@@ -17,9 +17,6 @@ export class Ceiling extends StandardInstancedMeshBase<PlaneGeometry> {
             uDividerColor: {
                 value: new Color()
             },
-            uDividerCount: {
-                value: new Vector2()
-            },
             uDividerStart: {
                 value: 0
             }
@@ -29,18 +26,20 @@ export class Ceiling extends StandardInstancedMeshBase<PlaneGeometry> {
 
     constructor(provider: IServiceProvider) {
         super(provider, provider.geometries.plane);
-
         this._mapGenerator = new TextureGenerator(provider.renderer, this._mapShaderParameter);
         this.material.map = this._mapGenerator.texture;
+        this.material.map.wrapS = RepeatWrapping;
+        this.material.map.wrapT = RepeatWrapping;
+        this.material.map.offset = new Vector2(0.5, 0.5);
         this.material.needsUpdate = true;
     }
 
     public override update(): void {
         this._mapShaderParameter.uniforms.uColor.value.set(this._provider.options.ceiling.panelColor);
         this._mapShaderParameter.uniforms.uDividerColor.value.set(this._provider.options.ceiling.dividerColor);
-        this._mapShaderParameter.uniforms.uDividerCount.value.copy(this._provider.options.ceiling.dividers);
         this._mapShaderParameter.uniforms.uDividerStart.value = this._provider.options.ceiling.dividerStart;
         this._mapGenerator.render()
+        this.material.map!.repeat.copy(this._provider.options.ceiling.dividers);
 
         const height = this._provider.options.serverRack.roomHeight * -0.5;
         const matrix = new Matrix4().makeScale(this._provider.options.serverRack.roomWidth, this._provider.options.serverRack.roomLength, 1);
