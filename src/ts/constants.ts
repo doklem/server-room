@@ -12,4 +12,6 @@ export class Constants {
     
     public static readonly Y_AXIS_EAST = new Quaternion().setFromAxisAngle(Constants.Y_AXIS, Constants.ANGLE_EAST);
     public static readonly Y_AXIS_WEST = new Quaternion().setFromAxisAngle(Constants.Y_AXIS, Constants.ANGLE_WEST);
+
+    public static readonly START_OFFSET = 0.25;
 }

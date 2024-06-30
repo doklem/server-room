@@ -1,13 +1,10 @@
-import { GUI } from 'lil-gui';
 import { StandardMaterialOptions } from './standard-material-options';
 
 export class WallOptions extends StandardMaterialOptions {
 
+    protected override readonly _folderName: string = 'Walls';
+
     constructor() {
         super('white');        
-    }
-
-    public override addToGui(gui: GUI, onChange: () => void): GUI {
-        return super.addToGui(gui, onChange, 'Walls');
     }
 }

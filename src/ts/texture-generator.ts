@@ -27,10 +27,11 @@ export class TextureGenerator {
     }
 
     constructor(private readonly _renderer: WebGLRenderer,
-        shaderMaterialParameters: ShaderMaterialParameters) {
+        shaderMaterialParameters: ShaderMaterialParameters,
+        width?: number, height?: number) {
         this._camera = new OrthographicCamera(-1, 1, 1, -1, 0.01, 2);
         this._camera.position.set(0, 0, 1);
-        this._renderTarget = new WebGLRenderTarget(512, 512);
+        this._renderTarget = new WebGLRenderTarget(width ?? 256, height ?? 256);
         this._renderTarget.texture.generateMipmaps = true;
         this._renderTarget.texture.needsUpdate;
         shaderMaterialParameters.precision = 'lowp';

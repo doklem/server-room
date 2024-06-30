@@ -1,13 +1,16 @@
-import { PhysicalInstancedMeshBase } from './physical-instanced-mesh-base';
-import { PhysicalMaterialOptions } from '../options/physical-material-options';
 import { IServiceProvider } from '../service-provider';
 import { BoxGeometry, Matrix4, Vector3 } from 'three';
 import { Constants } from '../constants';
+import { StandardMaterialOptions } from '../options/standard-material-options';
+import { StandardInstancedMeshBase } from './standard-instanced-mesh-base';
 
-export class ServerHousing extends PhysicalInstancedMeshBase<BoxGeometry> {
+export class ServerHousing extends StandardInstancedMeshBase<BoxGeometry> {
+
+    public readonly soundPositions: Vector3[];
 
     constructor(provider: IServiceProvider) {
         super(provider, provider.geometries.box, provider.options.instanceCount * 6);
+        this.soundPositions = [];
     }
 
     public override update(): void {
@@ -35,7 +38,12 @@ export class ServerHousing extends PhysicalInstancedMeshBase<BoxGeometry> {
             this._provider.options.serverRack.housing.thickness,
             this._provider.options.serverRack.housing.height - this._provider.options.serverRack.housing.thickness);
 
+        const soundZ = this._provider.options.serverRack.roomHeight * -0.5
+            + this._provider.options.serverRack.housing.height * 0.5;
+        this.soundPositions.length = 0;
+
         for (let i = 0; i < this._provider.options.instanceCount; i++) {
+            this.soundPositions.push(new Vector3(x, this._provider.options.serverRack.roomLength * i, soundZ));
             this.setMatrixAt(
                 i,
                 new Matrix4().compose(
@@ -44,6 +52,7 @@ export class ServerHousing extends PhysicalInstancedMeshBase<BoxGeometry> {
                     roofScale
                 )
             );
+            this.soundPositions.push(new Vector3(-x, this._provider.options.serverRack.roomLength * i, soundZ));
             this.setMatrixAt(
                 i + roofRightOffset,
                 new Matrix4().compose(
@@ -89,7 +98,7 @@ export class ServerHousing extends PhysicalInstancedMeshBase<BoxGeometry> {
         super.update();
     }
 
-    protected override getMaterialOptions(): PhysicalMaterialOptions {
+    protected override getMaterialOptions(): StandardMaterialOptions {
         return this._provider.options.serverRack.housing;
     }
 }

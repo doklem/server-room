@@ -1,10 +1,10 @@
 import { Matrix4, PlaneGeometry, Vector3 } from 'three';
-import { PhysicalInstancedMeshBase } from './physical-instanced-mesh-base';
-import { PhysicalMaterialOptions } from '../options/physical-material-options';
 import { IServiceProvider } from '../service-provider';
 import { Constants } from '../constants';
+import { StandardInstancedMeshBase } from './standard-instanced-mesh-base';
+import { StandardMaterialOptions } from '../options/standard-material-options';
 
-export class ServerBlade extends PhysicalInstancedMeshBase<PlaneGeometry> {
+export class ServerBlade extends StandardInstancedMeshBase<PlaneGeometry> {
 
     constructor(provider: IServiceProvider) {
         super(provider, provider.geometries.plane, provider.options.instanceCount * 2);
@@ -43,7 +43,7 @@ export class ServerBlade extends PhysicalInstancedMeshBase<PlaneGeometry> {
     }
 
 
-    protected override getMaterialOptions(): PhysicalMaterialOptions {
+    protected override getMaterialOptions(): StandardMaterialOptions {
         return this._provider.options.serverRack.blade;
     }
 }

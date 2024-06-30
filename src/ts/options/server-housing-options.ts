@@ -1,7 +1,9 @@
 import GUI from 'lil-gui';
-import { PhysicalMaterialOptions } from './physical-material-options';
+import { StandardMaterialOptions } from './standard-material-options';
 
-export class ServerHousingOptions extends PhysicalMaterialOptions {
+export class ServerHousingOptions extends StandardMaterialOptions {
+
+    protected override readonly _folderName: string = 'Housing';
 
     public width: number = 2;
     public length: number = 4;
@@ -15,13 +17,11 @@ export class ServerHousingOptions extends PhysicalMaterialOptions {
         this.metalness = 1;    
     }
 
-    public override addToGui(gui: GUI, onChange: () => void): GUI {
-        const folder = gui.addFolder('Housing').close();
-        folder.add(this, 'length', 0.001, 6, 0.001).name('Length (m)').onFinishChange(onChange);
-        folder.add(this, 'width', 0.001, 3, 0.001).name('Width (m)').onFinishChange(onChange);
-        folder.add(this, 'height', 0.001, 3, 0.001).name('Height (m)').onFinishChange(onChange);
-        folder.add(this, 'thickness', 0.001, 0.5, 0.001).name('Thickness (m)').onFinishChange(onChange);
-        super.addToGui(folder, onChange);
-        return folder;
+    protected override addOptions(gui: GUI, onChange: () => void): void {
+        gui.add(this, 'length', 0.001, 6, 0.001).name('Length (m)').onFinishChange(onChange);
+        gui.add(this, 'width', 0.001, 3, 0.001).name('Width (m)').onFinishChange(onChange);
+        gui.add(this, 'height', 0.001, 3, 0.001).name('Height (m)').onFinishChange(onChange);
+        gui.add(this, 'thickness', 0.001, 0.5, 0.001).name('Thickness (m)').onFinishChange(onChange);
+        super.addOptions(gui, onChange);
     }
 }
