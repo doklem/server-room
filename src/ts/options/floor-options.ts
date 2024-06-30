@@ -1,7 +1,8 @@
-import { GUI } from 'lil-gui';
 import { PhysicalMaterialOptions } from './physical-material-options';
 
 export class FloorOptions extends PhysicalMaterialOptions {
+
+    protected override readonly _folderName: string = 'Floor';
 
     constructor() {
         super('lightgray');
@@ -10,11 +11,7 @@ export class FloorOptions extends PhysicalMaterialOptions {
         this.metalness = 0;
         this.clearcoat = 1;
         this.clearcoatRoughness = 0;
-        this.thickness = 0.5;
+        this.thickness = 0;
         this.reflectivity = 1;
-    }
-
-    public override addToGui(gui: GUI, onChange: () => void): GUI {
-        return super.addToGui(gui, onChange, 'Floor');
     }
 }
